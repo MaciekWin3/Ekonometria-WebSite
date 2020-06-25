@@ -1,45 +1,39 @@
 <script>
 
-	import {inv} from 'mathjs';
-	let y = [[39], [32], [26],[24],[21],[20]];
-	let x = [[1,13], [1,18], [1,22], [1,25], [1,26], [1,28]];
-
-//mnożenie
-function multiplyMatrices(m1, m2) {
-    var result = [];
-    for (var i = 0; i < m1.length; i++) {
-        result[i] = [];
-        for (var j = 0; j < m2[0].length; j++) {
-            var sum = 0;
-            for (var k = 0; k < m1[0].length; k++) {
-                sum += m1[i][k] * m2[k][j];
-            }
-            result[i][j] = sum;
-        }
-    }
-    return result;
-}
-
-//transpozycja
-let xt = x[0].map((_, colIndex) => x.map(row => row[colIndex]));
-
-let xtx = inv(multiplyMatrices(xt, x));
-//console.log(xtx);
-
-let xty = multiplyMatrices(xt, y);
-//console.log(xty);
-
-let result = multiplyMatrices(xtx, xty);
-console.log(result);
-
-let interpretation = '';
+	import Kmnk from './components/Kmnk.svelte';
+	import Results from './components/Results.svelte';
+	import Footer from './components/footer.svelte';
+	import Header from './components/header.svelte';
+	import Button from './shared/Button.svelte';
 	
+	
+	let views = ['Main', 'KMNK', 'Results'];
+	export let activeView = 'KMNK';
+
+
+	const tabChange = (e) => activeView = e.detail;
+
+	const handleDone = (e) => {
+		let done = 
+		activeView = 'Results';
+		
+		var results = e.detail;
+		
+  	}
 </script>
 
+
+<Header {activeView} {views} on:tabChange={tabChange}/>
 <main>
-	<h1>Hello!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	{#if activeView === 'Results'}
+		<Results />
+	{:else if activeView === 'KMNK'}
+		<Kmnk on:done={handleDone}/>		
+	{:else}
+		<h4>Main</h4>
+	{/if}
 </main>
+<Footer/>
 
 <style>
 	main {
