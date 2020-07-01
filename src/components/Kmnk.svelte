@@ -12,12 +12,12 @@
     var data;
     var ytxt;
     var xtxt;
-    var xtxt2 = ' ';
-    var xtxt3 = ' ';
+    var xtxt2;
+    var xtxt3;
     let dispatch = createEventDispatcher();
-    let model = '';
+    let model;
     var howMany;
-    let zmienne = '1';
+    let zmienne;
     
 
 	//mnożenie
@@ -37,6 +37,7 @@
     }
 
     const useKmnk = () => {
+      console.log(zmienne);
         var y = [];
         var x = [];
         let arrayY = ytxt;
@@ -46,38 +47,71 @@
         arrayX = arrayX.split(' ');
         howMany = arrayY.length;
 
-        if (zmienne == 2){
+        if (zmienne == '2'){
           var arrayX2 = xtxt2;
           arrayX2 = arrayX2.split(' ');
         }
-        else if(zmienne = 3){
+        else if(zmienne == '3'){
           var arrayX2 = xtxt2;
           var arrayX3 = xtxt3;
 
           arrayX2 = arrayX2.split(' ');
           arrayX3 = arrayX3.split(' ');
-          console.log(arrayX3);
+          
         }
 
         console.log(arrayX);
         for(let i = 0; i < arrayY.length ; i++){
-            arrayY[i] = parseInt(arrayY[i]);
+            arrayY[i] = parseFloat(arrayY[i].replace(/,/, '.'));
             if(model == 'Potegowy' || model == 'Wykladniczy'){              
-              arrayY[i] = Math.log([arrayY[i]]);
-              console.log(arrayY[i]);
+              arrayY[i] = Math.log([arrayY[i]]);             
             }
+            //tworzenie macierzy Y
             y.push([arrayY[i]]);
         }
 
         for(let i = 0; i < arrayX.length ; i++){
-          arrayX[i] = parseInt(arrayX[i]);
+          arrayX[i] = parseFloat(arrayX[i].replace(/,/, '.')); //zawsze
+
+          if(zmienne == '2'){
+            arrayX2[i] = parseFloat(arrayX2[i].replace(/,/, '.')); 
+          }
+          else if(zmienne == '3'){
+            arrayX2[i] = parseFloat(arrayX2[i].replace(/,/, '.'));
+            arrayX3[i] = parseFloat(arrayX3[i].replace(/,/, '.')); 
+          }
+
             if (model == 'Potegowy'){
-              arrayY[i] = Math.log(arrayY[i]);
-              console.log('działa');
+              arrayX[i] = Math.log(arrayX[i]);  
+              if(zmienne == 2){                               
+                arrayX2[i] = Math.log(arrayX2[i]);                 
+              }
+              else if(zmienne == 3){               
+                arrayX2[i] = Math.log(arrayX2[i]);                               
+                arrayX3[i] = Math.log(arrayX3[i]);
+              }               
             }
-            x.push([1, arrayX[i]]);  
+            console.log(x);
+            console.log(y);
+            console.log(zmienne);
+            
+
+            //tworzenie macierzy X
+            if(zmienne == 1){//1
+              x.push([1, arrayX[i]]);
+            }
+            else if(zmienne == 2){
+              x.push([1, arrayX[i], arrayX2[i]]);//2
+            }
+            else if(zmienne == 3){
+              x.push([1, arrayX[i], arrayX2[i], arrayX3[i]]);//3
+            }
+
+            //x.push([1, arrayX[i]]);  
         }
 
+        //console.log(x);
+        //console.log(y);
         
         //transpozycja
         let xt = x[0].map((_, colIndex) => x.map(row => row[colIndex]));
@@ -88,14 +122,41 @@
         
         let result = multiplyMatrices(xtx, xty);
 
+        //stopnie swobody
+        let lss = howMany - zmienne - 1;
+        //wariancja resztowa
+        var averageY;
+        let q;
+        let averageYtab = [];
+        for(let i = 0; i < howMany; i++){
+          q = arrayY[i];
+          averageYtab[i] = averageY
+        }
+        averageY = q / howMany;
+
+        for(let i = 0; i < howMany; i++){
+          q = arrayY[i];
+          averageYtab[i] = averageY
+        }
+
         dispatch('done', result);
         
         let newData;
         let newChartData;
 
+        //wysyłanie danych
         Results.update(newData =>{
-            return {y: result[0], x: result[1]};
-            console.log(result[0]);
+            return {
+              isResult: true,
+              y: result[0],
+              x: result[1],
+              x2: result[2],
+              x3: result[3],
+              n: howMany,
+              lss: lss,
+
+            };        
+
         })
           //setting chart data
         let arrayNumbers = []
@@ -133,7 +194,7 @@
         }
         
 
-  let interpretation = '';
+  
   
 </script>
 
@@ -150,7 +211,7 @@
   <div class="small"></div>
   <div class="small-form-field" >
     <label for="question">Ilość zmiennych objaśnianych:</label>
-    <select bind:value = {zmienne} class='small-right'>
+    <select bind:value={zmienne} class='small-right'>
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
@@ -160,11 +221,11 @@
   <div class="form-field">
     <label for="ZmiennaY">Zmienna objaśniana:</label>
     <input type="text" id="y" bind:value={ytxt}>   
-  </div>
-  <div class="form-field">
+  </div>    
+   <div class="form-field">
     <label for="ZmiennaX1">Pierwsza zmienna objaśniająca:</label>
     <input type="text" id="y" bind:value={xtxt}>    
-  </div>
+  </div>  
   {#if zmienne == 2}
     <div class="form-field">
       <label for="ZmiennaX2">Druga zmienna objaśniająca:</label>

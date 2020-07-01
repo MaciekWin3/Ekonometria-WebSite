@@ -1,20 +1,21 @@
 <script>
 
+	import Main from './components/Main.svelte';
 	import Kmnk from './components/Kmnk.svelte';
 	import Results from './components/Results.svelte';
 	import Footer from './components/footer.svelte';
 	import Header from './components/header.svelte';
 	import Button from './shared/Button.svelte';
 	
-	
+	let isResult = false;
 	let views = ['Main', 'KMNK', 'Results'];
-	export let activeView = 'KMNK';
+	let activeView = 'Main';
 
 
 	const tabChange = (e) => activeView = e.detail;
 
 	const handleDone = (e) => {
-		let done = 
+		 
 		activeView = 'Results';
 		
 		var results = e.detail;
@@ -30,7 +31,7 @@
 	{:else if activeView === 'KMNK'}
 		<Kmnk on:done={handleDone}/>		
 	{:else}
-		<h4>Main</h4>
+		<Main />
 	{/if}
 </main>
 <Footer/>

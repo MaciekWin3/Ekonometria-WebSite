@@ -9,7 +9,7 @@
 <header>
 	<div class="overlay">
         <h1>Ekonometria</h1>
-        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vero nostrum quis, odio veniam itaque ullam debitis qui magnam consequatur ab. Vero nostrum quis, odio veniam itaque ullam debitis qui magnam consequatur ab.</p>
+        <p>Nauka pomocnicza w ramach ekonomii, wykorzystująca narzędzia matematyki, statystyki oraz informatyki do badania ilościowych związków zachodzących między zjawiskami i zmiennymi ekonomicznymi.</p>
 	<div class="tabs">
         <ul>
             {#each views as view}
@@ -32,7 +32,7 @@
         background-attachment: fixed;
         position: relative;
         overflow: hidden;
-        border-radius: 0 0 85% 85% / 30%;
+        /* border-radius: 0 0 85% 85% / 30%; */
     }
     header .overlay{
         width: 100%;
@@ -47,15 +47,16 @@
     h1 {
         font-family: 'Dancing Script', cursive;
         font-size: 40px;
+        margin-top: 15px;
         margin-bottom: 15px;
     }
 
     p {
         font-family: 'Open Sans', sans-serif;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
     .tabs{
-        margin-bottom: 40px;
+        margin-bottom: 20px;
     }
     ul{
         display: flex;
@@ -74,4 +75,5 @@
         border-bottom: 2px solid orangered;
         padding-bottom: 8px;
     }
+    
 </style>
